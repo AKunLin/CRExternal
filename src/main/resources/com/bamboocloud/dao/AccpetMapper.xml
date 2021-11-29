@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.dao.AcceptMapper">
+    <select id="selectByBindId" parameterType="String" resultType="com.bamboocloud.entity.Flow">
+        select * from `bo_eu_ldap_flow` where bindId = #{bindId}
+    </select>
+</mapper>

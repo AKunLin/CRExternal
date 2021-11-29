@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.oracle.OimDataMapper">
+
+    <resultMap id="oimUser" type="com.bamboocloud.entity.OimUser">
+        <result column="USR_LOGIN" jdbcType="VARCHAR" property="userLogin"/>
+        <result column="ACT_KEY" jdbcType="VARCHAR" property="oimActKey"/>
+        <result column="USR_KEY" jdbcType="VARCHAR" property="oimKey"/>
+        <result column="USR_UDF_NATIONALID" jdbcType="VARCHAR" property="nationalID"/>
+        <result column="USR_FIRST_NAME" jdbcType="VARCHAR" property="firstName"/>
+        <result column="USR_LAST_NAME" jdbcType="VARCHAR" property="lastName"/>
+        <result column="USR_DISPLAY_NAME" jdbcType="VARCHAR" property="displayName"/>
+        <result column="USR_TYPE" jdbcType="VARCHAR" property="userType"/>
+        <result column="USR_PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="USR_EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="USR_STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="USR_EMP_TYPE" jdbcType="VARCHAR" property="empType"/>
+        <result column="USR_MANAGER" jdbcType="VARCHAR" property="manager"/>
+        <result column="USR_CREATEBY" jdbcType="VARCHAR" property="createBy"/>
+        <result column="USR_UPDATEBY" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="USR_EMP_NO" jdbcType="VARCHAR" property="empNo"/>
+        <result column="USR_MOBILE" jdbcType="VARCHAR" property="mobile"/>
+        <result column="USR_COMMON_NAME" jdbcType="VARCHAR" property="commonName"/>
+        <result column="USR_DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="USR_TELEPHONE_NUMBER" jdbcType="VARCHAR" property="telephoneNumber"/>
+        <result column="USR_LDAP_GUID" jdbcType="VARCHAR" property="ldapGUID"/>
+        <result column="USR_LDAP_DN" jdbcType="VARCHAR" property="ldapDN"/>
+        <result column="USR_UDF_BUID" jdbcType="VARCHAR" property="buID"/>
+        <result column="USR_UDF_SUPPORTERDEPT" jdbcType="VARCHAR" property="supporterDept"/>
+        <result column="USR_UDF_DEPTID" jdbcType="VARCHAR" property="deptID"/>
+        <result column="USR_UDF_LASTNAMECHN" jdbcType="VARCHAR" property="lastNameCHN"/>
+        <result column="USR_UDF_FIRSTNAMECHN" jdbcType="VARCHAR" property="firstNameCHN"/>
+        <result column="USR_UDF_JOB_CODE" jdbcType="VARCHAR" property="jobCode"/>
+        <result column="USR_UDF_SETID" jdbcType="VARCHAR" property="setID"/>
+        <result column="USR_UDF_NATIONALIDLAST4" jdbcType="VARCHAR" property="nationalIDLast4"/>
+        <result column="USR_UDF_SUPPORTERCORPNAME" jdbcType="VARCHAR" property="supporterCorpname"/>
+        <result column="USR_UDF_SEC_EMAIL" jdbcType="VARCHAR" property="secEmail"/>
+        <result column="USR_UDF_PRI_EMAIL" jdbcType="VARCHAR" property="priEmail"/>
+
+        <result column="USR_PWD_EXPIRE_DATE" jdbcType="DATE" property="pwdExpireDate"/>
+        <result column="USR_START_DATE" jdbcType="DATE" property="startDate"/>
+        <result column="USR_END_DATE" jdbcType="DATE" property="endDate"/>
+        <result column="USR_HIRE_DATE" jdbcType="DATE" property="hireDate"/>
+    </resultMap>
+
+
+    <resultMap id="oimOrg" type="com.bamboocloud.entity.OimOrg">
+        <result column="ACT_KEY" jdbcType="VARCHAR" property="oimKey"/>
+        <result column="ACT_NAME" jdbcType="VARCHAR" property="orgName"/>
+        <result column="ACT_CUST_TYPE" jdbcType="VARCHAR" property="orgType"/>
+        <result column="CODE" jdbcType="VARCHAR" property="code"/>
+        <result column="ACT_CREATEBY" jdbcType="VARCHAR" property="createBy"/>
+        <result column="ACT_UPDATEBY" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="PARENT_KEY" jdbcType="VARCHAR" property="oimParentKey"/>
+        <result column="ACT_STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="ACT_UDF_COMPANY_CODE" jdbcType="VARCHAR" property="companyCode"/>
+        <result column="ACT_UDF_HRPARENTNODE" jdbcType="VARCHAR" property="hrParentNode"/>
+        <result column="ACT_UDF_SETID" jdbcType="VARCHAR" property="setID"/>
+        <result column="ACT_UDF_HRTREE_NODE" jdbcType="VARCHAR" property="hrTreeNode"/>
+        <result column="ACT_UDF_COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+    </resultMap>
+
+
+
+    <select id="getUserByPage" parameterType="java.lang.Integer" resultMap="oimUser">
+        select *
+        from (select a.* ,rownum rn
+              from (select * from uat_oim.usr_view) a
+              where rownum &lt; #{rownum})
+        where rn &gt; #{rn}
+    </select>
+
+    <select id="getOrgByPage" parameterType="java.lang.Integer" resultMap="oimOrg">
+        select *
+        from (select  a.* ,rownum rn,(concat(ACT_UDF_SETID,ACT_UDF_HRTREE_NODE)) CODE
+              from (select * from uat_oim.org_view order by ACT_KEY asc) a
+              where rownum &lt; #{rownum} )
+        where rn &gt; #{rn}
+    </select>
+
+    <select id="getUserSize" resultType="java.lang.Integer">
+        select count(*) from uat_oim.usr_view
+    </select>
+
+    <select id="getOrgSize" resultType="java.lang.Integer">
+        select count(*) from uat_oim.org_view
+    </select>
+
+    <select id="getOIMRealUser" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select * from uat_oim.usr_view where USR_LOGIN = #{username}
+    </select>
+
+    <select id="getOIMRealOrg" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select * from uat_oim.org_view where ACT_KEY = #{actKey}
+    </select>
+
+</mapper>

@@ -1,0 +1,10 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# CodeStream ignored files
+/../../CRExternal\.idea/codestream.xml
+# Datasource local storage ignored files
+/../../../../../../../../:\Users\luaku\Desktop\华润项目SVN\05.实施阶段\CRExternal\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
